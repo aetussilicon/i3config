@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Ação ao clicar com o mouse
+if [ "$BLOCK_BUTTON" == "1" ]; then
+    blueman-manager &
+    exit 0
+fi
+
+# Verifica se o bluetooth está ativo
+status=$(rfkill list bluetooth | grep -i "Soft blocked: yes")
+
+if [ -z "$status" ]; then
+    # Mostra os dispositivos conectados
+    devices=$(bluetoothctl info | grep "Device" | wc -l)
+    if [ "$devices" -gt 0 ]; then
+        echo " On ($devices)"
+    else
+        echo " On"
+    fi
+else
+    echo " Off"
+fi
+
